@@ -1,0 +1,16 @@
+# sistema / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# dependencias e builds (o site e estatico, mas protege se alguem instalar algo)
+node_modules/
+.vercel/
+.env
+.env.*
+
+# arquivos temporarios
+*.log
+*.tmp
