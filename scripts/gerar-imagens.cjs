@@ -9,10 +9,9 @@
      node scripts/versionar.cjs   <- SEMPRE depois, senao o navegador
                                      continua mostrando a foto antiga
 
-   Sao cinco grupos, cada um com sua pasta, proporcao e larguras:
+   Sao quatro grupos, cada um com sua pasta, proporcao e larguras:
 
-     hero     -> assets/img/           16:9,  760 / 1200 / 1536   (fundo do topo)
-     arte     -> assets/img/           SEM CORTE, 440 / 700 / 1122 (o cartaz do topo)
+     arte     -> assets/img/           SEM CORTE, 440 / 700 / 1122 (fundo do topo)
      sobre    -> assets/img/           5:4,   700 / 1100
      produtos -> assets/img/produtos/  4:3,   460 / 760
      galeria  -> assets/img/galeria/   4:3,   460 / 760
@@ -37,13 +36,9 @@ const sharp = require('sharp');
 
 const RAIZ = path.resolve(__dirname, '..');
 
-/* a foto que fica de fundo no topo da pagina */
-const HERO = {
-  pasta: '', destino: '', proporcao: 16 / 9, larguras: [760, 1200, 1536],
-  fotos: { 'hero-galpao': { de: 'hero-galpao.webp' } },
-};
-
-/* o cartaz "O aco certo para a sua obra" — entra inteiro, sem corte */
+/* o cartaz "O aco certo para a sua obra": e o FUNDO do topo da pagina e entra
+   inteiro, sem corte. (A foto do letreiro, hero-galpao.webp, continua guardada
+   em fotos-origem/ caso queiram voltar a usar, mas hoje nao vai para o site.) */
 const ARTE = {
   pasta: '', destino: '', semCorte: true, larguras: [440, 700, 1122],
   fotos: { 'hero-arte': { de: 'hero-arte.webp' } },
@@ -147,7 +142,7 @@ async function gerarGrupo(grupo) {
 }
 
 (async () => {
-  for (const grupo of [HERO, ARTE, SOBRE, PRODUTOS, GALERIA]) await gerarGrupo(grupo);
+  for (const grupo of [ARTE, SOBRE, PRODUTOS, GALERIA]) await gerarGrupo(grupo);
 
   console.log(n + ' arquivos gerados em assets/img/  (' + (total / 1024).toFixed(0) + ' kB)');
   if (avisos.length) {

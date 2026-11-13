@@ -32,20 +32,24 @@ endereço de imagem do `index.html`. Sem ele, quem já visitou o site continua
 vendo a **foto antiga** por até 24 h, porque o `vercel.json` manda o navegador
 guardar as imagens e o nome do arquivo não muda quando a foto muda.
 
-O script cuida de cinco grupos, cada um com sua pasta, proporção e larguras:
+O script cuida de quatro grupos, cada um com sua pasta, proporção e larguras:
 
 | grupo | origem | destino | proporção | larguras |
 |---|---|---|---|---|
-| hero (fundo) | `fotos-origem/hero-galpao.webp` | `assets/img/` | 16:9 | 760 / 1200 / 1536 |
-| arte (cartaz) | `fotos-origem/hero-arte.webp` | `assets/img/` | **sem corte** | 440 / 700 / 1122 |
+| arte (fundo do topo) | `fotos-origem/hero-arte.webp` | `assets/img/` | **sem corte** | 440 / 700 / 1122 |
 | sobre | `fotos-origem/patio-aberto.webp` | `assets/img/` | 5:4 | 700 / 1100 |
 | produtos | `fotos-origem/produtos/` | `assets/img/produtos/` | 4:3 | 460 / 760 |
 | galeria | `fotos-origem/galeria/` | `assets/img/galeria/` | 4:3 | 460 / 760 |
 
-O grupo **arte** usa `semCorte: true`: o cartaz tem texto até a borda, então ele
-entra inteiro, só reduzido até caber. No celular ele ocupa a largura toda abaixo
-do texto; no computador fica à direita do texto e encolhe pela altura da tela
-(`max-height`), nunca é cortado.
+O grupo **arte** é o cartaz que faz o fundo do topo e usa `semCorte: true`: como
+ele tem texto até a borda, entra inteiro, só reduzido até caber. No celular ele é
+a imagem do topo, na largura toda, e o texto vem logo abaixo; no computador ele
+ocupa a direita e o texto fica à esquerda, sobre o azul. Em nenhum dos dois ele é
+cortado.
+
+A foto do letreiro (`fotos-origem/hero-galpao.webp`) saiu do site quando o cartaz
+virou o fundo. Ela continua guardada ali: para voltar a usá-la, recrie o grupo
+`HERO` no script.
 
 Para trocar uma foto, salve a nova na pasta do grupo com o mesmo nome e rode o
 script. Para acrescentar uma da galeria, coloque o arquivo lá, inclua o nome na
@@ -57,8 +61,7 @@ pedida, ele gera no tamanho que der e avisa no fim. Essa lista de avisos é o qu
 vale pedir ao cliente em melhor resolução — hoje seis fotos da galeria estão
 abaixo de 460 px e aparecem um pouco borradas na tela grande.
 
-**O que já é material da Valduga:** o cartaz do topo, a foto de fundo da hero
-(com o letreiro), a foto do "Sobre nós", os **seis** quadros de "Nossos
+**O que já é material da Valduga:** o cartaz que faz o fundo do topo, a foto do "Sobre nós", os **seis** quadros de "Nossos
 produtos" e a galeria inteira. **O que ainda é de banco de imagens gratuito
 (Pexels)** e serve de marcador: as duas fotos de serviços
 (`servico-vigas-*`, `servico-vergalhoes-*`) e a faixa escura
