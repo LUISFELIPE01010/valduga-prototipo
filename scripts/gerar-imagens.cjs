@@ -7,9 +7,11 @@
      npm i --no-save sharp
      node scripts/gerar-imagens.cjs
 
-   Sao tres grupos, cada um com sua pasta, proporcao e larguras:
+   Sao cinco grupos, cada um com sua pasta, proporcao e larguras:
 
-     hero     -> assets/img/           16:9,  760 / 1200 / 1536
+     hero     -> assets/img/           16:9,  760 / 1200 / 1536   (fundo do topo)
+     arte     -> assets/img/           SEM CORTE, 440 / 700 / 1122 (o cartaz do topo)
+     sobre    -> assets/img/           5:4,   700 / 1100
      produtos -> assets/img/produtos/  4:3,   460 / 760
      galeria  -> assets/img/galeria/   4:3,   460 / 760
 
@@ -22,8 +24,10 @@
    e rode o script. Para acrescentar uma da galeria, inclua na lista GALERIA
    abaixo e tambem no index.html (secao Galeria).
 
-     foco — onde o corte deve se apoiar: 'centre' (padrao), 'top', 'bottom',
-            ou um numero de 0 (topo) a 1 (base).
+     foco     — onde o corte deve se apoiar: 'centre' (padrao), 'top', 'bottom',
+                ou um numero de 0 (topo) a 1 (base).
+     semCorte — true: a imagem inteira entra, sem corte nenhum. E o caso do
+                cartaz da hero, que tem texto ate a borda e nao pode ser cortado.
    ============================================================================ */
 const fs = require('fs');
 const path = require('path');
@@ -31,18 +35,34 @@ const sharp = require('sharp');
 
 const RAIZ = path.resolve(__dirname, '..');
 
-/* a foto grande do topo da pagina */
+/* a foto que fica de fundo no topo da pagina */
 const HERO = {
   pasta: '', destino: '', proporcao: 16 / 9, larguras: [760, 1200, 1536],
   fotos: { 'hero-galpao': { de: 'hero-galpao.webp' } },
+};
+
+/* o cartaz "O aco certo para a sua obra" — entra inteiro, sem corte */
+const ARTE = {
+  pasta: '', destino: '', semCorte: true, larguras: [440, 700, 1122],
+  fotos: { 'hero-arte': { de: 'hero-arte.webp' } },
+};
+
+/* a foto da secao "Sobre nos" */
+const SOBRE = {
+  pasta: '', destino: '', proporcao: 5 / 4, larguras: [700, 1100],
+  fotos: { 'sobre-galpao': { de: 'patio-aberto.webp' } },
 };
 
 /* os seis quadros de "Nossos produtos" */
 const PRODUTOS = {
   pasta: 'produtos', destino: 'produtos', proporcao: 4 / 3, larguras: [460, 760],
   fotos: {
-    'perfis': { de: 'perfis.jpg' },
-    'tubos':  { de: 'tubos.jpg' },
+    'perfis':     { de: 'perfis.jpg' },
+    'tubos':      { de: 'tubos.jpg' },
+    'metalon':    { de: 'metalon.jpg' },
+    'vergalhoes': { de: 'vergalhoes.webp', foco: 0.55 },
+    'arames':     { de: 'arames.jpg' },
+    'telas':      { de: 'telas.jpg' },
   },
 };
 
@@ -85,38 +105,47 @@ async function gerarGrupo(grupo) {
     if (!fs.existsSync(entrada)) throw new Error('falta a foto de origem: ' + entrada);
     const m = await sharp(entrada).metadata();
 
-    // maior largura possivel sem esticar a foto: o corte pode ser limitado
-    // pela largura OU pela altura da original
-    const maxLargura = Math.min(m.width, Math.round(m.height * grupo.proporcao));
+    // maior largura possivel sem esticar a foto: com corte, ela pode ser
+    // limitada pela largura OU pela altura da original
+    const maxLargura = grupo.semCorte
+      ? m.width
+      : Math.min(m.width, Math.round(m.height * grupo.proporcao));
 
     for (const w of grupo.larguras) {
       const largura = Math.min(w, maxLargura);
-      const altura = Math.round(largura / grupo.proporcao);
-
-      let img = sharp(entrada);
-      if (typeof cfg.foco === 'number') {
-        // corta na altura exata antes de redimensionar
-        let cw = m.width, ch = Math.round(cw / grupo.proporcao);
-        if (ch > m.height) { ch = m.height; cw = Math.round(ch * grupo.proporcao); }
-        const left = Math.round((m.width - cw) / 2);
-        const top = Math.max(0, Math.min(m.height - ch, Math.round(m.height * cfg.foco - ch / 2)));
-        img = img.extract({ left, top, width: cw, height: ch });
-      }
       const arq = path.join(DESTINO, `${nome}-${w}.webp`);
-      await img.resize({
-        width: largura, height: altura, fit: 'cover',
-        position: typeof cfg.foco === 'number' ? 'centre' : (cfg.foco || 'centre'),
-        kernel: 'lanczos3',
-      }).webp({ quality: 82 }).toFile(arq);
-      total += fs.statSync(arq).size; n++;
 
+      if (grupo.semCorte) {
+        // a imagem inteira, so reduzida: nada de corte
+        await sharp(entrada)
+          .resize({ width: largura, fit: 'inside', kernel: 'lanczos3' })
+          .webp({ quality: 86 }).toFile(arq);
+      } else {
+        const altura = Math.round(largura / grupo.proporcao);
+        let img = sharp(entrada);
+        if (typeof cfg.foco === 'number') {
+          // corta na altura exata antes de redimensionar
+          let cw = m.width, ch = Math.round(cw / grupo.proporcao);
+          if (ch > m.height) { ch = m.height; cw = Math.round(ch * grupo.proporcao); }
+          const left = Math.round((m.width - cw) / 2);
+          const top = Math.max(0, Math.min(m.height - ch, Math.round(m.height * cfg.foco - ch / 2)));
+          img = img.extract({ left, top, width: cw, height: ch });
+        }
+        await img.resize({
+          width: largura, height: altura, fit: 'cover',
+          position: typeof cfg.foco === 'number' ? 'centre' : (cfg.foco || 'centre'),
+          kernel: 'lanczos3',
+        }).webp({ quality: 82 }).toFile(arq);
+      }
+
+      total += fs.statSync(arq).size; n++;
       if (largura < w) avisos.push(`${nome}: pedido ${w}px, a original so da ${largura}px`);
     }
   }
 }
 
 (async () => {
-  for (const grupo of [HERO, PRODUTOS, GALERIA]) await gerarGrupo(grupo);
+  for (const grupo of [HERO, ARTE, SOBRE, PRODUTOS, GALERIA]) await gerarGrupo(grupo);
 
   console.log(n + ' arquivos gerados em assets/img/  (' + (total / 1024).toFixed(0) + ' kB)');
   if (avisos.length) {

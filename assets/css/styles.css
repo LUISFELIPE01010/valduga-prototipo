@@ -189,6 +189,12 @@ p{margin:0}
 .hero__p{margin-top:1.2rem;max-width:33rem;color:#c3c9d4;font-size:clamp(.92rem,2.4vw,1.02rem);line-height:1.65}
 .hero__actions{margin-top:1.8rem;display:flex;flex-wrap:wrap;gap:.9rem}
 
+/* cartaz "O aco certo para a sua obra" — a imagem inteira, sem corte */
+.hero__arte{margin:2.2rem auto 0;width:min(100%,27rem)}
+.hero__arte img{display:block;margin-inline:auto;width:auto;height:auto;
+  max-width:100%;max-height:none;border-radius:14px;
+  box-shadow:0 26px 60px -24px rgba(0,0,0,.85);border:1px solid rgba(255,255,255,.14)}
+
 /* tagline manuscrita */
 .hero__script{
   display:none;position:absolute;z-index:3;right:clamp(1.5rem,4vw,4.5rem);top:calc(var(--header-h) + 2.2rem);
@@ -198,7 +204,7 @@ p{margin:0}
 .hero__script b{display:block;font-weight:500}
 .hero__script::after{content:"";display:block;width:76%;height:3px;margin-top:.35rem;border-radius:3px;
   background:var(--b-400);transform:rotate(1.5deg)}
-@media (min-width:1024px){ .hero__script{display:block} }
+/* o cartaz do topo ja traz a frase, entao a tagline manuscrita fica escondida */
 
 /* formas de metal no canto inferior esquerdo */
 .hero__metal{position:absolute;left:0;bottom:0;z-index:2;width:min(46%,640px);height:min(46%,300px);pointer-events:none}
@@ -217,9 +223,17 @@ p{margin:0}
 
 @media (min-width:1024px){
   .hero{min-height:clamp(560px,43vw,820px);display:flex;flex-direction:column;justify-content:center}
-  .hero__inner{padding-block:clamp(2rem,3vw,3.2rem)}
-  .hero__title{font-size:clamp(2.4rem,4.5vw,4.4rem)}
+  .hero__inner{padding-block:clamp(2rem,3vw,3.2rem);
+    display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:clamp(1.6rem,4vw,3.6rem)}
+  .hero__title{font-size:clamp(2.2rem,3.4vw,3.6rem)}
   .hero__p{font-size:1.06rem;max-width:30rem}
+  .hero__content{max-width:36rem}
+  /* a altura manda: o cartaz encolhe ate caber na tela, nunca e cortado */
+  .hero__arte{margin:0;width:auto}
+  .hero__arte img{max-height:min(72vh,30rem);max-width:min(26vw,25rem)}
+}
+@media (min-width:1500px){
+  .hero__arte img{max-height:min(74vh,36rem);max-width:min(24vw,28rem)}
 }
 
 /* ---------- 6. Faixa de diferenciais (dentro da hero) ---------- */
