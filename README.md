@@ -24,7 +24,13 @@ script:
 ```bash
 npm i --no-save sharp
 node scripts/gerar-imagens.cjs
+node scripts/versionar.cjs
 ```
+
+Os dois comandos andam juntos: o segundo carimba um `?v=<hash>` em cada
+endereço de imagem do `index.html`. Sem ele, quem já visitou o site continua
+vendo a **foto antiga** por até 24 h, porque o `vercel.json` manda o navegador
+guardar as imagens e o nome do arquivo não muda quando a foto muda.
 
 O script cuida de cinco grupos, cada um com sua pasta, proporção e larguras:
 

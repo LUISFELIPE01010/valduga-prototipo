@@ -6,6 +6,8 @@
 
      npm i --no-save sharp
      node scripts/gerar-imagens.cjs
+     node scripts/versionar.cjs   <- SEMPRE depois, senao o navegador
+                                     continua mostrando a foto antiga
 
    Sao cinco grupos, cada um com sua pasta, proporcao e larguras:
 
