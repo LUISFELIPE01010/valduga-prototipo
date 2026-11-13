@@ -57,7 +57,7 @@ const PRODUTOS = {
     'perfis':     { de: 'perfis.jpg' },
     'tubos':      { de: 'tubos.jpg' },
     'metalon':    { de: 'metalon.jpg' },
-    'vergalhoes': { de: 'vergalhoes.webp', foco: 0.55 },
+    'vergalhoes': { de: 'vergalhoes.webp' },
     'arames':     { de: 'arames.jpg' },
     'telas':      { de: 'telas.jpg' },
   },
