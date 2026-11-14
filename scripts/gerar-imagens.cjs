@@ -9,9 +9,10 @@
      node scripts/versionar.cjs   <- SEMPRE depois, senao o navegador
                                      continua mostrando a foto antiga
 
-   Sao quatro grupos, cada um com sua pasta, proporcao e larguras:
+   Sao cinco grupos, cada um com sua pasta, proporcao e larguras:
 
-     arte     -> assets/img/           SEM CORTE, 440 / 700 / 1122 (fundo do topo)
+     obra     -> assets/img/           16:9,  760 / 1200 / 1672  (topo no computador)
+     arte     -> assets/img/           SEM CORTE, 440 / 700 / 1122 (topo no celular)
      sobre    -> assets/img/           5:4,   700 / 1100
      produtos -> assets/img/produtos/  4:3,   460 / 760
      galeria  -> assets/img/galeria/   4:3,   460 / 760
@@ -36,7 +37,15 @@ const sharp = require('sharp');
 
 const RAIZ = path.resolve(__dirname, '..');
 
-/* o cartaz "O aco certo para a sua obra": e o FUNDO do topo da pagina e entra
+/* a arte deitada: e o fundo do topo NO COMPUTADOR. Veio da mesma arte, com o
+   texto e os botoes apagados (eles sao escritos pelo site, como texto de
+   verdade). A original tem 1672px, entao nao tem variante maior que isso. */
+const OBRA = {
+  pasta: '', destino: '', proporcao: 1672 / 941, larguras: [760, 1200, 1672],
+  fotos: { 'hero-obra': { de: 'hero-obra.png' } },
+};
+
+/* o cartaz em pe: e o fundo do topo NO CELULAR. Entra
    inteiro, sem corte. (A foto do letreiro, hero-galpao.webp, continua guardada
    em fotos-origem/ caso queiram voltar a usar, mas hoje nao vai para o site.) */
 const ARTE = {
@@ -142,7 +151,7 @@ async function gerarGrupo(grupo) {
 }
 
 (async () => {
-  for (const grupo of [ARTE, SOBRE, PRODUTOS, GALERIA]) await gerarGrupo(grupo);
+  for (const grupo of [OBRA, ARTE, SOBRE, PRODUTOS, GALERIA]) await gerarGrupo(grupo);
 
   console.log(n + ' arquivos gerados em assets/img/  (' + (total / 1024).toFixed(0) + ' kB)');
   if (avisos.length) {

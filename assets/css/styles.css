@@ -173,12 +173,14 @@ p{margin:0}
 
 /* ---------- 5. Hero ---------- */
 .hero{position:relative;background:var(--navy);color:#fff;padding-top:var(--header-h);overflow:hidden;isolation:isolate}
-/* o fundo do topo e o cartaz, e ele entra INTEIRO: object-fit contain, nunca cover.
-   No celular ele e a imagem do topo e o texto vem logo abaixo; no computador
-   ele ocupa a direita e o texto fica a esquerda, sobre o azul. */
+/* No CELULAR o fundo do topo e o cartaz em pe: entra inteiro (contain, nunca
+   cover) como imagem do topo, e o texto vem logo abaixo.
+   No COMPUTADOR e a mesma arte na deitada, cobrindo o topo todo, com o texto
+   por cima — o texto e os botoes desenhados na arte foram apagados, porque o
+   site escreve os de verdade. */
 .hero__topo{position:relative}
 .hero__bg{position:static;z-index:0}
-.hero__bg img{display:block;width:100%;height:auto;object-fit:contain}
+.hero__bg img,.hero__bg picture{display:block;width:100%;height:auto;object-fit:contain}
 /* gradiente para o texto ficar legivel sobre a foto */
 .hero__bg::after{content:"";display:none}
 .hero__inner{position:relative;z-index:3;padding-block:clamp(2.2rem,5vw,3.4rem)}
@@ -226,13 +228,20 @@ p{margin:0}
   .hero__p{font-size:1.06rem;max-width:30rem}
   .hero__content{max-width:min(50%,34rem)}
 
-  /* o cartaz volta a ser fundo, encostado a direita, e encolhe pela ALTURA da
-     tela para caber inteiro. A esquerda sobra o azul, onde fica o texto. */
-  .hero__bg{position:absolute;top:0;right:0;bottom:0;left:auto;width:min(52%,680px)}
-  .hero__bg img{width:100%;height:100%;object-fit:contain;object-position:right center}
-  /* uma borda suave para o cartaz nao terminar em linha reta sobre o azul */
+  /* a arte deitada cobre o topo inteiro. A proporcao da propria arte manda na
+     altura, para a cena aparecer quase toda; em tela baixa o max-height corta
+     um pouco do ceu e do chao, nunca a escultura. */
+  /* a altura segue a proporcao da arte (1672x941), mas sem passar da tela.
+     Nao uso aspect-ratio aqui: ele encolheria a largura junto. */
+  .hero__topo{height:min(56.3vw,84vh,860px)}
+  .hero__bg{position:absolute;inset:0;width:auto}
+  .hero__bg img,.hero__bg picture{width:100%;height:100%;object-fit:cover;object-position:right center}
+  /* um veu leve a mais do lado do texto: a arte ja vem escura ali, isto so
+     garante o contraste quando a tela e estreita e a foto chega mais perto */
   .hero__bg::after{content:"";display:block;position:absolute;inset:0;pointer-events:none;
-    background:linear-gradient(90deg,var(--navy) 0%,rgba(11,18,32,.55) 7%,rgba(11,18,32,0) 20%)}
+    background:linear-gradient(90deg,rgba(11,18,32,.5) 0%,rgba(11,18,32,.3) 26%,rgba(11,18,32,.08) 40%,rgba(11,18,32,0) 50%)}
+  /* as formas azuis da borda esquerda ja vem desenhadas na arte */
+  .hero__chevron,.hero__metal{display:none}
 }
 
 /* ---------- 6. Faixa de diferenciais (dentro da hero) ---------- */

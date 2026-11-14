@@ -32,20 +32,30 @@ endereço de imagem do `index.html`. Sem ele, quem já visitou o site continua
 vendo a **foto antiga** por até 24 h, porque o `vercel.json` manda o navegador
 guardar as imagens e o nome do arquivo não muda quando a foto muda.
 
-O script cuida de quatro grupos, cada um com sua pasta, proporção e larguras:
+O script cuida de cinco grupos, cada um com sua pasta, proporção e larguras:
 
 | grupo | origem | destino | proporção | larguras |
 |---|---|---|---|---|
-| arte (fundo do topo) | `fotos-origem/hero-arte.webp` | `assets/img/` | **sem corte** | 440 / 700 / 1122 |
+| obra (topo no computador) | `fotos-origem/hero-obra.png` | `assets/img/` | 16:9 | 760 / 1200 / 1672 |
+| arte (topo no celular) | `fotos-origem/hero-arte.webp` | `assets/img/` | **sem corte** | 440 / 700 / 1122 |
 | sobre | `fotos-origem/patio-aberto.webp` | `assets/img/` | 5:4 | 700 / 1100 |
 | produtos | `fotos-origem/produtos/` | `assets/img/produtos/` | 4:3 | 460 / 760 |
 | galeria | `fotos-origem/galeria/` | `assets/img/galeria/` | 4:3 | 460 / 760 |
 
-O grupo **arte** é o cartaz que faz o fundo do topo e usa `semCorte: true`: como
-ele tem texto até a borda, entra inteiro, só reduzido até caber. No celular ele é
-a imagem do topo, na largura toda, e o texto vem logo abaixo; no computador ele
-ocupa a direita e o texto fica à esquerda, sobre o azul. Em nenhum dos dois ele é
-cortado.
+O topo usa **duas** imagens, trocadas por `<picture>`:
+
+- **computador** (`hero-obra`): a arte na deitada, cobrindo o topo inteiro, com o
+  texto e os botões do site por cima. O texto e os botões que vinham desenhados
+  na arte foram apagados — não por reconstrução de pixel, e sim estendendo o
+  próprio véu azul-escuro dela até depois do texto (script em
+  `scripts/veu-arte.cjs`). Por isso o capacete aparece saindo do escuro: ele fica
+  em parte sob esse véu.
+- **celular** (`hero-arte`): o cartaz em pé, inteiro (`semCorte: true`), como imagem
+  do topo, com o texto logo abaixo.
+
+A arte deitada tem **1672 px**. Acima disso o navegador amplia (em tela 4K ela
+fica um pouco mole). Se pedirem a arte em 2560 px, é só trocar o arquivo de
+origem e acrescentar a largura na lista do grupo.
 
 A foto do letreiro (`fotos-origem/hero-galpao.webp`) saiu do site quando o cartaz
 virou o fundo. Ela continua guardada ali: para voltar a usá-la, recrie o grupo
