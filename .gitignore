@@ -15,3 +15,6 @@ node_modules/
 *.log
 *.tmp
 package-lock.json
+
+# pacote gerado para upload na Locaweb (refazer quando precisar)
+locaweb/
