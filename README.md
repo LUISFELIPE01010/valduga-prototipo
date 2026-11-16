@@ -87,4 +87,4 @@ de moldura em vez de um recorte mal feito sobre o azul.
 
 - Trocar o domínio de exemplo `https://www.valdugaacos.com.br/` em `index.html`
   (`canonical`, `og:url`), `robots.txt` e `sitemap.xml`.
-- Conferir os telefones: (11) 99194-5659 e (11) 99194-5649.
+- Conferir os telefones: (11) 4612-3879.
